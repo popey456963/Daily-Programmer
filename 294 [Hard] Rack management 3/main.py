@@ -3,7 +3,6 @@
 
 import copy, random, timeit
 
-start = timeit.default_timer()
 original_row = "sd?zeioao?mluvepesceinfxt?wyiru?ie?giator?t??nuefje?l?odndrotpewlgoobiinysagacaqski?aeh?rbhaervtnl?m"
 words = [[line.strip(), 0] for line in open("enable1.txt") if len(line.strip()) < 11]
 letters = "abcdefghijklmnopqsrtuvwxyz"
@@ -80,7 +79,7 @@ def randomHand(hand, row, order=False):
     row = row[:-stealRight]
   return [stealLeft, hand, row, bestWord(hand)]  
 
-currentArray = [7,0]  
+currentArray = [0] 
 currentBest = [0, 0]
 currentAttempt = 0
 
@@ -89,7 +88,7 @@ def updateSeq(score):
   currentAttempt += 1
   if score > currentBest[1]:
     currentBest = [currentArray[-1], score]
-  if currentAttempt == 10:
+  if currentAttempt == 100:
     currentAttempt = 0
     if currentArray[-1] == 9:
       currentArray[-1] = currentBest[0]
@@ -132,7 +131,8 @@ if __name__ == "__main__":
     words[index].append(sortWord(item[0]))
   words = sorted(words, key=lambda x: x[1], reverse=True)
   best = [0, ""]
-  mainCounter = 10
+  mainCounter = 0
+  start = timeit.default_timer()
   while 1:
     results = attackRow()
     if results[0] > best[0]:
@@ -141,8 +141,8 @@ if __name__ == "__main__":
       for sentence in results[1]:
         print(sentence)
       print("Total Score: " + str(results[0]))
-    mainCounter -= 1
-    if mainCounter < 0:
-      break
-  stop = timeit.default_timer()
-  print(stop - start)
+    mainCounter += 1
+    if mainCounter > 9:
+      print(timeit.default_timer() - start)
+      start = timeit.default_timer()
+      mainCounter = 0
